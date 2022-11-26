@@ -7,7 +7,7 @@ class Dispatcher {
 
 	private function __construct() {}
 
-	public static function process(Route $route) : mixed
+	public static function process(Route $route) : string
 	{
 
 		$class = $route->getController();

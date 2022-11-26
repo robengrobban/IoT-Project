@@ -64,7 +64,7 @@ class Route {
 			$uri['path'] .= "/";
 			$uri = Http::buildUri($uri);
 			Response::redirect($uri);
-			exit();
+			Response::abort();
 		}
 
 		$routes = self::$routes[$method];
@@ -80,7 +80,7 @@ class Route {
 
 		if ( is_null($selectedRoute) ) {
 			Response::codeNotFound();
-			exit();
+			Response::abort();
 		}
 
 		return Dispatcher::process($selectedRoute);
