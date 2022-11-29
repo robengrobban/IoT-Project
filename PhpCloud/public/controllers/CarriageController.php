@@ -25,7 +25,7 @@ class CarriageController
 			Response::abort();
 		}
 
-		return Response::JSON($carriage);
+		return Response::JSON($carriage[0]);
 	}
 
 	public static function indexSensor() : string {

@@ -27,7 +27,7 @@
 			Response::abort();
 		}
 
-		return Response::JSON($train);
+		return Response::JSON($train[0]);
 	}
 
 	public static function next() : string {
@@ -42,7 +42,7 @@
 			Response::abort();
 		}
 
-		return Response::JSON($train);
+		return Response::JSON($train[0]);
 	}
 
  }

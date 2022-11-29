@@ -25,7 +25,7 @@ class PlatformController
 			Response::abort();
 		}
 
-		return Response::JSON($platform);
+		return Response::JSON($platform[0]);
 	}
 
 	public static function indexSensor() : string {

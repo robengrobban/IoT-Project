@@ -28,13 +28,13 @@ class SensorController
 		// Investigate for carriage
 		$carriageSensor = DB::get("*", "carriage_sensors", "address = ?", [Request::params()->get('address')]);
 		if ( !empty($carriageSensor) ) {
-			return Response::JSON($carriageSensor);
+			return Response::JSON($carriageSensor[0]);
 		}
 
 		// Investigate for platform
 		$platformSensor = DB::get("*", "platform_sensors", "address = ?", [Request::params()->get('address')]);
 		if ( !empty($platformSensor) ) {
-			return Response::JSON($platformSensor);
+			return Response::JSON($platformSensor[0]);
 		}
 
 		Response::codeNotFound();
