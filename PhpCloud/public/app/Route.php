@@ -33,7 +33,14 @@ class Route {
 		$route->controller = $controller;
 		$route->function = $function;
 
-		self::$routes[$method][] = $route;
+		$dynamicRoute = preg_match("/{\w+}/", $uri);
+
+		if ($dynamicRoute) {
+			self::$routes[$method][] = $route;
+		}
+		else {
+			array_unshift(self::$routes[$method], $route);
+		}
 
 		return $route;
 	}
@@ -64,19 +71,10 @@ class Route {
 			$uri['path'] .= "/";
 			$uri = Http::buildUri($uri);
 			Response::redirect($uri);
-			Response::abort();
 		}
 
 		$routes = self::$routes[$method];
-		$selectedRoute = null;
-
-		foreach( $routes as $route ) {
-			if ( $route->uri !== $uri['path'] ) {
-				continue;
-			}
-			$selectedRoute = $route;
-			break;
-		}
+		$selectedRoute = self::findRoute($routes, $uri);
 
 		if ( is_null($selectedRoute) ) {
 			Response::codeNotFound();
@@ -84,6 +82,42 @@ class Route {
 		}
 
 		return Dispatcher::process($selectedRoute);
+	}
+
+	private static function findRoute($routes, $uri) : Route|null {
+		$selectedRoute = null;
+		$parameters = array();
+
+		$uri_parts = explode("/", $uri['path']);
+
+		foreach ( $routes as $route ) {
+			$route_parts = explode("/", $route->uri);
+			if ( count($route_parts) != count($uri_parts) ) {
+				continue;
+			}
+			$found = true;
+			for ($i = 0; $i < count($uri_parts); $i++) {
+				if ( $uri_parts[$i] == $route_parts[$i] ) {
+					continue;
+				}
+				$parameter = preg_match("/{\w+}/", $route_parts[$i]);
+				if ( $parameter ) {
+					$variable = mb_substr($route_parts[$i], 1, mb_strlen($route_parts[$i])-2);
+					$parameters[$variable] = $uri_parts[$i];
+					continue;
+				}
+				$found = false;
+				break;
+			}
+			if ($found) {
+				$selectedRoute = $route;
+				break;
+			}
+		}
+
+		Request::setParams($parameters);
+
+		return $selectedRoute;
 	}
 
 	public function getMethod(): string

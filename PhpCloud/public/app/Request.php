@@ -7,6 +7,7 @@ class Request
 {
 
 	private static Data $data;
+	private static Data $params;
 	private static string $method;
 
 	private const GET = "GET";
@@ -39,6 +40,11 @@ class Request
 		return $params;
 	}
 
+	public static function setParams(array $params): void
+	{
+		self::$params = new Data($params);
+	}
+
 	public static function getMethod() : string
 	{
 		return self::$method;
@@ -47,6 +53,11 @@ class Request
 	public static function data() : object
 	{
 		return self::$data;
+	}
+
+	public static function params() : object|null
+	{
+		return self::$params;
 	}
 
 	public static function isMethod(string $method) : bool

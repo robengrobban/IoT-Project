@@ -26,5 +26,8 @@ register_shutdown_function(function () {
 });
 
 require("controllers/TrainController.php");
+require("controllers/CarriageController.php");
+require("controllers/PlatformController.php");
+require("controllers/SensorController.php");
 
 App::registerRoutes();
