@@ -30,5 +30,19 @@
 		return Response::JSON($train);
 	}
 
+	public static function next() : string {
+		if ( !Request::params()->nonempty("platform") ) {
+			Response::codeBadRequest();
+			Response::abort();
+		}
+
+		$train = DB::get("*", "trains", "id = ?", [1]);
+		if ( is_null($train) || empty($train) ) {
+			Response::codeNotFound();
+			Response::abort();
+		}
+
+		return Response::JSON($train);
+	}
 
  }

@@ -12,7 +12,7 @@ class App {
 	}
 
 	public static function handleRequest(): void {
-		$uri = mb_strtolower($_SERVER['REQUEST_URI']);
+		$uri = $_SERVER['REQUEST_URI'];
 		$method = mb_strtoupper($_SERVER['REQUEST_METHOD']);
 		echo Route::dispatch($uri, $method);
 	}
