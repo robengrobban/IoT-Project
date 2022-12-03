@@ -9,6 +9,7 @@ class Route {
 	private string $uri;
 	private string $controller;
 	private string $function;
+	private array $parameters;
 
 	private function __construct() {}
 
@@ -115,8 +116,7 @@ class Route {
 			}
 		}
 
-		Request::setParams($parameters);
-
+		$selectedRoute->setParameters($parameters);
 		return $selectedRoute;
 	}
 
@@ -138,6 +138,14 @@ class Route {
 	public function getFunction(): string
 	{
 		return $this->function;
+	}
+
+	public function getParameters() : array {
+		return $this->parameters;
+	}
+
+	public function setParameters(array $params) : void {
+		$this->parameters = $params;
 	}
 
 }

@@ -19,8 +19,10 @@ class Request
 	private function __construct()
 	{}
 
-	public static function start() : void
+	public static function start(array $params = array()) : void
 	{
+		self::$params = new Data($params);
+
 		self::$method = $_SERVER['REQUEST_METHOD'];
 		if ( self::$method === self::GET ) {
 			self::$data = new Data($_GET);
@@ -35,14 +37,9 @@ class Request
 
 	private static function readRequest() : array
 	{
-		$params = array();
-		parse_str(file_get_contents('php://input'), $params);
-		return $params;
-	}
-
-	public static function setParams(array $params): void
-	{
-		self::$params = new Data($params);
+		$data = array();
+		parse_str(file_get_contents('php://input'), $data);
+		return $data;
 	}
 
 	public static function getMethod() : string

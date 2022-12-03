@@ -14,6 +14,8 @@ class Dispatcher {
 		$controller = new $class();
 		$function = $route->getFunction();
 
+		Request::start($route->getParameters());
+
 		return $controller->$function();
 	}
 

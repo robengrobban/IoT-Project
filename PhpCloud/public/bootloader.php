@@ -16,8 +16,6 @@ require("app/Response.php");
 
 const SYSTEM_DIR = __DIR__;
 
-Request::start();
-
 Response::codeOK();
 Response::contentTypeJSON();
 
