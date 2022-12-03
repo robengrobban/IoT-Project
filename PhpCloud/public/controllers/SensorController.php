@@ -20,19 +20,19 @@ class SensorController
 	}
 
 	public static function get() : string {
-		if ( !Request::params()->nonempty('address') ) {
+		if ( !Request::params()->nonempty('uuid') ) {
 			Response::codeBadRequest();
 			Response::abort();
 		}
 
 		// Investigate for carriage
-		$carriageSensor = DB::get("*", "carriage_sensors", "address = ?", [Request::params()->get('address')]);
+		$carriageSensor = DB::get("*", "carriage_sensors", "uuid = ?", [Request::params()->get('uuid')]);
 		if ( !empty($carriageSensor) ) {
 			return Response::JSON($carriageSensor[0]);
 		}
 
 		// Investigate for platform
-		$platformSensor = DB::get("*", "platform_sensors", "address = ?", [Request::params()->get('address')]);
+		$platformSensor = DB::get("*", "platform_sensors", "uuid = ?", [Request::params()->get('uuid')]);
 		if ( !empty($platformSensor) ) {
 			return Response::JSON($platformSensor[0]);
 		}
@@ -57,6 +57,27 @@ class SensorController
 			Response::abort();
 		}
 		return Response::JSON($platformSensor);
+	}
+
+	public static function getPlatform() : string {
+		if ( !Request::params()->nonempty('uuid') ) {
+			Response::codeBadRequest();
+			Response::abort();
+		}
+
+		$platformName = DB::get("*", "platforms", "name = (SELECT platform_name FROM platform_sensors WHERE uuid = ?)", [Request::params()->get('uuid')]);
+		if ( empty($platformName) ) {
+			Response::codeNotFound();
+			Response::abort();
+		}
+		$platformName = $platformName[0];
+
+		$platformSensors = DB::execute("SELECT * FROM platform_sensors WHERE platform_name = ? ORDER BY relative_position ASC", [$platformName['name']]);
+		if ( is_null($platformSensors) ) {
+			Response::codeNotFound();
+			Response::abort();
+		}
+		return Response::JSON(array('platform' => $platformName, 'sensors' => $platformSensors));
 	}
 
 }
