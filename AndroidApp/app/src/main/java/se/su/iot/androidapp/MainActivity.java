@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BeaconManager beaconManager;
     private Region region;
+    private boolean switchingMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +42,24 @@ public class MainActivity extends AppCompatActivity {
         getBluetoothPermissions();
 
         beaconManager = BeaconManager.getInstanceForApplication(this);
-
         beaconManager.addRangeNotifier(getRangeNotifier());
-
         region = new Region("UserRegion", null, null, null);
-        beaconManager.startRangingBeacons(region);
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        System.out.println("Resuming...");
+        beaconManager.startRangingBeacons(region);
+        switchingMode = false;
+    }
+
     private void switchPlatformActivity(Platform platform) {
+        if (switchingMode) {
+            return;
+        }
+        switchingMode = true;
         beaconManager.stopRangingBeacons(region);
         Intent moveScreenIntent = new Intent(MainActivity.this, PlatformActivity.class);
         moveScreenIntent.putExtra("platform", platform);
@@ -79,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                     Platform platform = new Platform(location);
                     for (int i = 0; i < sensors.length(); i++) {
                         JSONObject instance = sensors.getJSONObject(i);
-                        PlatformSensor sensor = new PlatformSensor(instance.getString("uuid"), instance.getString("platform_name"), instance.getDouble("relative_position"));
+                        PlatformSensor sensor = new PlatformSensor(instance.getString("uuid"), instance.getDouble("relative_position"));
                         platform.addSensor(sensor);
                     }
 

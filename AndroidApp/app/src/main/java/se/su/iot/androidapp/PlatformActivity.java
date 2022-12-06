@@ -18,7 +18,7 @@ public class PlatformActivity extends AppCompatActivity {
 
         textView.setText(platform.getName());
         for ( PlatformSensor sensor : platform.getSensors() ) {
-            System.out.println(sensor.getUuid() + " " + sensor.getPlatform() + " " + sensor.getPosition());
+            System.out.println(sensor.getUuid() + " " + sensor.getPosition());
         }
 
     }

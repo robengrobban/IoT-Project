@@ -5,21 +5,15 @@ import java.io.Serializable;
 public class PlatformSensor implements Serializable {
 
     private String uuid;
-    private String platform;
     private double position;
 
-    public PlatformSensor(String uuid, String platform, double position) {
+    public PlatformSensor(String uuid, double position) {
         this.uuid = uuid;
-        this.platform = platform;
         this.position = position;
     }
 
     public String getUuid() {
         return uuid;
-    }
-
-    public String getPlatform() {
-        return platform;
     }
 
     public double getPosition() {
