@@ -29,7 +29,6 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     private BeaconManager beaconManager;
-    private Region region;
     private boolean switchingMode = false;
 
     @Override
@@ -42,17 +41,21 @@ public class MainActivity extends AppCompatActivity {
         getBluetoothPermissions();
 
         beaconManager = BeaconManager.getInstanceForApplication(this);
-        beaconManager.addRangeNotifier(getRangeNotifier());
-        region = new Region("UserRegion", null, null, null);
+        beaconManager.startRangingBeacons(new Region("UserRegion", null, null, null));
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        System.out.println("Resuming...");
-        beaconManager.startRangingBeacons(region);
+        beaconManager.addRangeNotifier(getRangeNotifier());
         switchingMode = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        beaconManager.removeAllRangeNotifiers();
     }
 
     private void switchPlatformActivity(Platform platform) {
@@ -60,10 +63,9 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         switchingMode = true;
-        beaconManager.stopRangingBeacons(region);
         Intent moveScreenIntent = new Intent(MainActivity.this, PlatformActivity.class);
         moveScreenIntent.putExtra("platform", platform);
-        MainActivity.this.startActivity(moveScreenIntent);
+        startActivity(moveScreenIntent);
     }
 
 
@@ -75,21 +77,16 @@ public class MainActivity extends AppCompatActivity {
                 double distance = beacon.getDistance();
                 Identifier identifier = beacon.getIdentifier(0);
 
-                System.out.println("Found identifier: " + identifier.toString());
-                System.out.println("At a distance of: " + distance + "m");
-
                 JSONObject json = sendPlatformRequest("http://iot.studentenfix.se/sensor/platform/" + identifier.toString() + "/");
-                System.out.println(json);
                 try {
 
                     String location = json.getJSONObject("platform").getString("name");
                     JSONArray sensors = json.getJSONArray("sensors");
-                    System.out.println(sensors);
 
                     Platform platform = new Platform(location);
                     for (int i = 0; i < sensors.length(); i++) {
                         JSONObject instance = sensors.getJSONObject(i);
-                        PlatformSensor sensor = new PlatformSensor(instance.getString("uuid"), instance.getDouble("relative_position"));
+                        Sensor sensor = new Sensor(instance.getString("uuid"), instance.getDouble("relative_position"));
                         platform.addSensor(sensor);
                     }
 
@@ -100,8 +97,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-
-            System.out.println("\n---------\n");
 
         };
     }
