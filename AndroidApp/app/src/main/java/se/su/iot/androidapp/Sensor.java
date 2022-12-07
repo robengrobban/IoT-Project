@@ -13,6 +13,7 @@ public class Sensor implements Serializable {
         this.uuid = uuid.toLowerCase();
         this.position = position;
         this.height = height;
+        this.distance = Double.MAX_VALUE;
     }
 
     public String getUuid() {
