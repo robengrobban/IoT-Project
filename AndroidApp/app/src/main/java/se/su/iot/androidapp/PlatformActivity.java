@@ -16,19 +16,22 @@ import java.util.Collection;
 public class PlatformActivity extends AppCompatActivity {
 
     private BeaconManager beaconManager;
+    private Platform platform;
     private Location platformLocation;
+
+    private TextView topText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_platform);
 
-        Platform platform = (Platform) getIntent().getSerializableExtra("platform");
+        platform = (Platform) getIntent().getSerializableExtra("platform");
         platformLocation = new Location(platform);
 
-        TextView textView = findViewById(R.id.textView);
+        topText = findViewById(R.id.topText);
 
-        textView.setText(platform.getName());
+        topText.setText(platform.getName());
 
         beaconManager = BeaconManager.getInstanceForApplication(this);
 
@@ -58,6 +61,11 @@ public class PlatformActivity extends AppCompatActivity {
                 platformLocation.updateDistances(identifier.toString(), distance);
 
             }
+
+            double position = platformLocation.getPositioning();
+
+            topText.setText(platform.getName());
+
 
         };
     }

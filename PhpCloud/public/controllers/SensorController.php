@@ -26,13 +26,13 @@ class SensorController
 		}
 
 		// Investigate for carriage
-		$carriageSensor = DB::get("*", "carriage_sensors", "uuid = ?", [Request::params()->get('uuid')]);
+		$carriageSensor = DB::get("*", "carriage_sensors", "LOWER(uuid) = LOWER(?)", [Request::params()->get('uuid')]);
 		if ( !empty($carriageSensor) ) {
 			return Response::JSON($carriageSensor[0]);
 		}
 
 		// Investigate for platform
-		$platformSensor = DB::get("*", "platform_sensors", "uuid = ?", [Request::params()->get('uuid')]);
+		$platformSensor = DB::get("*", "platform_sensors", "LOWER(uuid) = LOWER(?)", [Request::params()->get('uuid')]);
 		if ( !empty($platformSensor) ) {
 			return Response::JSON($platformSensor[0]);
 		}
@@ -65,14 +65,14 @@ class SensorController
 			Response::abort();
 		}
 
-		$platformName = DB::get("*", "platforms", "name = (SELECT platform_name FROM platform_sensors WHERE uuid = ?)", [Request::params()->get('uuid')]);
+		$platformName = DB::get("*", "platforms", "name = (SELECT platform_name FROM platform_sensors WHERE LOWER(uuid) = LOWER(?))", [Request::params()->get('uuid')]);
 		if ( empty($platformName) ) {
 			Response::codeNotFound();
 			Response::abort();
 		}
 		$platformName = $platformName[0];
 
-		$platformSensors = DB::execute("SELECT * FROM platform_sensors WHERE platform_name = ? ORDER BY relative_position ASC", [$platformName['name']]);
+		$platformSensors = DB::execute("SELECT * FROM platform_sensors WHERE platform_name = ? ORDER BY position ASC", [$platformName['name']]);
 		if ( is_null($platformSensors) ) {
 			Response::codeNotFound();
 			Response::abort();

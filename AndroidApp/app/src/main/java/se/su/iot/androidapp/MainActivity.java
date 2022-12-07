@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.widget.TextView;
 
 import org.altbeacon.beacon.Beacon;
@@ -41,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
         getBluetoothPermissions();
 
         beaconManager = BeaconManager.getInstanceForApplication(this);
+        beaconManager.setForegroundBetweenScanPeriod(0);
+        beaconManager.setForegroundScanPeriod(300);
+        beaconManager.setBackgroundBetweenScanPeriod(0);
+        beaconManager.setBackgroundScanPeriod(300);
         beaconManager.startRangingBeacons(new Region("UserRegion", null, null, null));
 
     }
@@ -74,19 +79,19 @@ public class MainActivity extends AppCompatActivity {
 
             for (Beacon beacon : beacons) {
 
-                double distance = beacon.getDistance();
                 Identifier identifier = beacon.getIdentifier(0);
 
                 JSONObject json = sendPlatformRequest("http://iot.studentenfix.se/sensor/platform/" + identifier.toString() + "/");
                 try {
 
-                    String location = json.getJSONObject("platform").getString("name");
+                    String name = json.getJSONObject("platform").getString("name");
+                    double length = json.getJSONObject("platform").getDouble("length");
                     JSONArray sensors = json.getJSONArray("sensors");
 
-                    Platform platform = new Platform(location);
+                    Platform platform = new Platform(name, length);
                     for (int i = 0; i < sensors.length(); i++) {
                         JSONObject instance = sensors.getJSONObject(i);
-                        Sensor sensor = new Sensor(instance.getString("uuid"), instance.getDouble("relative_position"));
+                        Sensor sensor = new Sensor(instance.getString("uuid"), instance.getDouble("position"), instance.getDouble("height"));
                         platform.addSensor(sensor);
                     }
 
