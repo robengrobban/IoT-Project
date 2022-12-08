@@ -34,6 +34,7 @@ public class Location {
         int closestIndex = 0;
         for ( int i = 0; i < sensorsInOrder.size(); i++ ) {
             Sensor sensor = sensorsInOrder.get(i);
+            System.out.println(sensor.getUuid() + " " + sensor.getDistance());
             if (closest.getDistance() > sensor.getDistance()) {
                 closest = sensor;
                 closestIndex = i;
@@ -62,20 +63,31 @@ public class Location {
         }
 
         // Decide on positioning
+        double finalPosition = 0.0;
         if ( distanceToSensorBefore < distanceBetweenSensors(before, closest) ) {
-            return possiblePositionBefore;
+            finalPosition = possiblePositionBefore;
         }
         else if ( distanceToSensorAfter < distanceBetweenSensors(closest, after) ) {
-            return possiblePositionAfter;
+            finalPosition = possiblePositionAfter;
         }
         else if ( before == null ) {
-            return 0;
+            finalPosition = possiblePositionBefore;
         }
         else if ( after == null ) {
+            finalPosition = possiblePositionAfter;
+        }
+        else {
+            finalPosition = sensorPosition;
+        }
+
+        if ( finalPosition < 0 ) {
+            return 0;
+        }
+        else if ( finalPosition > platformLength ) {
             return platformLength;
         }
         else {
-            return sensorPosition;
+            return finalPosition;
         }
 
     }

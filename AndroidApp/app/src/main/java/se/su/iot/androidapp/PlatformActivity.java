@@ -21,6 +21,8 @@ public class PlatformActivity extends AppCompatActivity {
 
     private TextView topText;
 
+    private PlatformView platformView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,8 @@ public class PlatformActivity extends AppCompatActivity {
         topText.setText(platform.getName());
 
         beaconManager = BeaconManager.getInstanceForApplication(this);
+
+        platformView = findViewById(R.id.platformView);
 
     }
 
@@ -63,9 +67,11 @@ public class PlatformActivity extends AppCompatActivity {
             }
 
             double position = platformLocation.getPositioning();
+            double length = platform.getLength();
 
-            topText.setText(platform.getName());
+            System.out.println("Position: " + position);
 
+            platformView.locationChanged(position/length);
 
         };
     }
