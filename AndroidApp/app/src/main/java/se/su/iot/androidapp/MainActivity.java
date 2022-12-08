@@ -37,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView loadingText = findViewById(R.id.loadingPrompt);
-
         getBluetoothPermissions();
 
         beaconManager = BeaconManager.getInstanceForApplication(this);
