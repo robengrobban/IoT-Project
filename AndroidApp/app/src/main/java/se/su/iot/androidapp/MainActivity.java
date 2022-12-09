@@ -7,14 +7,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
-import android.widget.TextView;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.Identifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
+import org.altbeacon.beacon.service.RangedBeacon;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         getBluetoothPermissions();
 
+        RangedBeacon.setSampleExpirationMilliseconds(3000);
         beaconManager = BeaconManager.getInstanceForApplication(this);
         beaconManager.setForegroundBetweenScanPeriod(0);
         beaconManager.setForegroundScanPeriod(300);
@@ -94,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     switchPlatformActivity(platform);
+                    break;
 
                 } catch (JSONException e) {
                     e.printStackTrace();
