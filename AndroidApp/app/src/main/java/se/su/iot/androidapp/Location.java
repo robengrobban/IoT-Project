@@ -70,10 +70,10 @@ public class Location {
         else if ( distanceToSensorAfter < distanceBetweenSensors(closest, after) ) {
             finalPosition = possiblePositionAfter;
         }
-        else if ( before == null ) {
+        else if ( before == null && after != null ) {
             finalPosition = possiblePositionBefore;
         }
-        else if ( after == null ) {
+        else if ( after == null && before != null ) {
             finalPosition = possiblePositionAfter;
         }
         else {
