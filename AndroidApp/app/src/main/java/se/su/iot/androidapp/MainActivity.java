@@ -13,6 +13,7 @@ import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.Identifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
+import org.altbeacon.beacon.service.ArmaRssiFilter;
 import org.altbeacon.beacon.service.RangedBeacon;
 
 import org.json.JSONArray;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Identifier identifier = beacon.getIdentifier(0);
 
-                JSONObject json = sendPlatformRequest("http://iot.studentenfix.se/sensor/platform/" + identifier.toString() + "/");
+                JSONObject json = sendPlatformRequest(identifier.toString());
                 try {
 
                     String name = json.getJSONObject("platform").getString("name");
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
             OkHttpClient client = new OkHttpClient();
 
-            Request request = new Request.Builder().url(params[0]).build();
+            Request request = new Request.Builder().url("http://iot.studentenfix.se/sensor/platform/" + params[0] + "/").build();
 
             JSONObject json = null;
 

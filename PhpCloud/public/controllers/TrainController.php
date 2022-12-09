@@ -35,14 +35,17 @@
 			Response::codeBadRequest();
 			Response::abort();
 		}
+		$simulatedTrainId = 1;
 
-		$train = DB::get("*", "trains", "id = ?", [1]);
+		$train = DB::get("*", "trains", "id = ?", [$simulatedTrainId]);
 		if ( is_null($train) || empty($train) ) {
 			Response::codeNotFound();
 			Response::abort();
 		}
 
-		return Response::JSON($train[0]);
+		$carriages = DB::execute("SELECT * FROM carriages WHERE train_id = ? ORDER BY position ASC", [$simulatedTrainId]);
+
+		return Response::JSON(array('train' => $train[0], 'carriages' => $carriages));
 	}
 
  }
