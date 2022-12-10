@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.List;
 import java.util.SortedSet;
 
 public class TrainView extends View {
@@ -34,6 +35,10 @@ public class TrainView extends View {
         this.train = train;
     }
 
+    public Train getTrain() {
+        return this.train;
+    }
+
     private void init() {
         carriagePaint = new Paint();
         carriageRect = new Rect();
@@ -52,7 +57,7 @@ public class TrainView extends View {
         int trainHeight = height - paddingY*2;
         int carriagePadding = (int) (trainHeight * 0.05);
 
-        SortedSet<Carriage> carriages = train.getCarriages();
+        List<Carriage> carriages = train.getCarriages();
         int numberOfPaddings = carriages.size() - 1;
         int carriageHeight = trainHeight / carriages.size();
         int crowdPadding = (int) (carriageHeight * 0.05);

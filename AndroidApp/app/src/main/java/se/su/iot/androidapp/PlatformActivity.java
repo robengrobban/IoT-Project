@@ -14,9 +14,12 @@ import org.altbeacon.beacon.Region;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.*;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import okhttp3.OkHttpClient;
@@ -33,6 +36,8 @@ public class PlatformActivity extends AppCompatActivity {
 
     private PlatformView platformView;
     private TrainView trainView;
+
+    private MqttAndroidClient mqttClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,87 @@ public class PlatformActivity extends AppCompatActivity {
 
         beaconManager = BeaconManager.getInstanceForApplication(this);
 
+        connectMqtt();
+
+    }
+
+    private void connectMqtt() {
+
+        MqttConnectOptions mqttOptions = new MqttConnectOptions();
+
+        mqttClient = new MqttAndroidClient(getApplicationContext(), "tcp://83.226.147.68:1883", UUID.randomUUID().toString());
+
+        try {
+            mqttClient.connect(mqttOptions, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    subscribeTopic("train/"+trainView.getTrain().getId());
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    // TODO: Handle failure
+                }
+            });
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void subscribeTopic(String topic) {
+        try {
+            mqttClient.subscribe(topic, 0, null, new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    mqttClient.setCallback(getMqttCallback());
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    // TODO: Handle failure
+                }
+            });
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private MqttCallback getMqttCallback() {
+        return new MqttCallback() {
+            @Override
+            public void connectionLost(Throwable cause) {
+
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                String json = message.toString();
+                JSONObject root = new JSONObject(json);
+
+                int trainId = root.getJSONObject("train").getInt("id");
+                if ( trainId != trainView.getTrain().getId() ) {
+                    // TODO: Handle wrong train
+                    return;
+                }
+
+                JSONArray carriages = root.getJSONArray("carriages");
+                for (int i = 0; i < carriages.length(); i++) {
+                    JSONObject instance = (JSONObject) carriages.get(i);
+                    int index = instance.getInt("position")-1;
+                    double crowdedness = instance.getDouble("crowdedness");
+                    trainView.getTrain().updateCrowdedness(index, crowdedness);
+                }
+
+                trainView.invalidate();
+
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        };
     }
 
     private JSONObject getNextTrain() {
@@ -72,8 +158,6 @@ public class PlatformActivity extends AppCompatActivity {
         JSONObject nextTrain = getNextTrain();
 
         try {
-
-            System.out.println(nextTrain);
 
             JSONObject trainJson = nextTrain.getJSONObject("train");
             JSONArray carriagesJson = nextTrain.getJSONArray("carriages");
@@ -123,7 +207,7 @@ public class PlatformActivity extends AppCompatActivity {
             double position = platformLocation.getPositioning();
             double length = platform.getLength();
 
-            System.out.println("Position: " + position);
+            //System.out.println("Position: " + position);
 
             platformView.locationChanged(position/length);
 

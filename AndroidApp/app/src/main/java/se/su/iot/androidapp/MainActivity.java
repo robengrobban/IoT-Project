@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         getBluetoothPermissions();
 
-        RangedBeacon.setSampleExpirationMilliseconds(3000);
+        RangedBeacon.setSampleExpirationMilliseconds(5000);
         beaconManager = BeaconManager.getInstanceForApplication(this);
         beaconManager.setForegroundBetweenScanPeriod(0);
         beaconManager.setForegroundScanPeriod(300);

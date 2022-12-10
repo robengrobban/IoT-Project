@@ -13,7 +13,7 @@ public class Carriage implements Comparable<Carriage> {
     public Carriage(int id, int position) {
         this.id = id;
         this.position = position;
-        this.crowdedness = Math.random();
+        this.crowdedness = 0;
     }
 
     public void setTrain(Train train) {
@@ -48,6 +48,10 @@ public class Carriage implements Comparable<Carriage> {
 
     public double getCrowdedness() {
         return this.crowdedness;
+    }
+
+    public void setCrowdedness(double crowdedness) {
+        this.crowdedness = crowdedness;
     }
 
 

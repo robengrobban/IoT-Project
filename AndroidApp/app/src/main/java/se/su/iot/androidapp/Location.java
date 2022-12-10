@@ -34,7 +34,7 @@ public class Location {
         int closestIndex = 0;
         for ( int i = 0; i < sensorsInOrder.size(); i++ ) {
             Sensor sensor = sensorsInOrder.get(i);
-            System.out.println(sensor.getUuid() + " " + sensor.getDistance());
+            //System.out.println(sensor.getUuid() + " " + sensor.getDistance());
             if (closest.getDistance() > sensor.getDistance()) {
                 closest = sensor;
                 closestIndex = i;
