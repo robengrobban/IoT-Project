@@ -17,7 +17,9 @@ import paho.mqtt.subscribe as subscribe
 #}
 
 #HTTP Request to http://iot.studentenfix.se/carriage/ for information about all the carraiges.
+carriageData = requests.get(url="http://iot.studentenfix.se/carriage/").json()
 
+print(json.dumps(carriageData, indent=2))
 
 #Subscribe to topics related to each carriage
 
