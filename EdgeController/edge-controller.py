@@ -16,6 +16,9 @@ import paho.mqtt.subscribe as subscribe
 #	]
 #}
 
+#broker = "83.226.147.68"
+broker = "tcp://83.226.147.68:1883"
+
 #HTTP Request to http://iot.studentenfix.se/carriage/ for information about all the carraiges.
 carriageData = requests.get(url="http://iot.studentenfix.se/carriage/").json()
 
