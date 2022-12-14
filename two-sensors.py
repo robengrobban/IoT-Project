@@ -23,6 +23,6 @@ def get_proximity(sensor): #Create a method for getting proximity data from a se
 	return proximity
 
 while True: # Loop and read proximity from sensor one and sensor two
-    get_proximity(sensor_prox_first)-
+    get_proximity(sensor_prox_first)
     get_proximity(sensor_prox_second)
     time.sleep(1.0)
