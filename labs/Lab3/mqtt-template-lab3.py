@@ -13,7 +13,7 @@ import busio
 
 # Uncomment the correct sensor 
 import adafruit_vcnl4010 	# Proximity sensor
-import adafruit_tcs34725 	# RGB sensor
+#import adafruit_tcs34725 	# RGB sensor
 #import adafruit_tsl2591 	# High range lux sensor
 
  
@@ -22,7 +22,7 @@ i2c = busio.I2C(board.SCL, board.SDA)
 
 # Uncomment your current sensor :)
 sensor_prox = adafruit_vcnl4010.VCNL4010(i2c)	# Proximity
-sensor_rgb = adafruit_tcs34725.TCS34725(i2c)	# RGB sensor
+#sensor_rgb = adafruit_tcs34725.TCS34725(i2c)	# RGB sensor
 #sensor_lux = adafruit_tsl2591.TSL2591(i2c)		# High range lux sensor
 
 # Set MQTT broker and topic
