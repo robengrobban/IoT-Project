@@ -50,10 +50,18 @@ clinet.connect(broker)
 #subscribing to the topic 
 clinet.subscribe("id", qos= 0)
 
+def on_connect(client, uderdata, flags, rc)
+
 def on_message(client, userdata, message):
+    data= (str(msg.payload.decode("utf-8")))
+    json_object= json.loads(data)
+    print(json_object)
+    print(json_object['id'], json_object['AvailableSeats'], json_object['OccupiedSeats'])
 
     #printing the message payload
     print(message.payload)
+    
+    client.on_connect = on_connect
 
     #setting on message callback
     client.on_message = on_message
