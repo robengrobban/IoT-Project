@@ -45,7 +45,7 @@ print(json.dumps(carriageData, indent=2))
 clinet= mqtt.Client()
 
 #connecting to the mqtt broker
-clinet.connect("localhost", 83.226.147.68:1883)
+clinet.connect("localhost", broker)
 
 #subscribing to the topic 
 clinet.subscribe("id", qos= 0)
@@ -60,7 +60,7 @@ def on_message(client, userdata, message):
 
     #looping to forever receive messages
     client.loop_forever()
-    
+
 
 
 
