@@ -21,8 +21,8 @@ import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 import paho.mqtt.subscribe as subscribe
 
-#broker = "83.226.147.68"
-broker = "tcp://83.226.147.68:1883"
+broker = "83.226.147.68"
+#broker = "tcp://83.226.147.68:1883"
 
 #HTTP Request to http://iot.studentenfix.se/carriage/ for information about all the carraiges.
 #The information is acquired as a JSON format. It holds information about all the carriages that 
@@ -45,7 +45,7 @@ print(json.dumps(carriageData, indent=2))
 clinet= mqtt.Client()
 
 #connecting to the mqtt broker
-clinet.connect("localhost", broker)
+clinet.connect(broker)
 
 #subscribing to the topic 
 clinet.subscribe("id", qos= 0)
