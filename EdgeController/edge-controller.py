@@ -41,6 +41,28 @@ print(json.dumps(carriageData, indent=2))
 #This information can be saved in a datastructure, so that the edge controller has information about each carriage and their crowdedness. Crowdedness can
 #be calculated as a % of available seats.
 
+#creating a mqtt client instance
+clinet= mqtt.Client()
+
+#connecting to the mqtt broker
+clinet.connect("localhost", 83.226.147.68:1883)
+
+#subscribing to the topic 
+clinet.subscribe("id", qos= 0)
+
+def on_message(client, userdata, message):
+
+    #printing the message payload
+    print(message.payload)
+
+    #setting on message callback
+    client.on_message = on_message
+
+    #looping to forever receive messages
+    client.loop_forever()
+    
+
+
 
 
 #Aggregate the carriage data
