@@ -8,8 +8,8 @@ import board
 import adafruit_vcnl4010
 import adafruit_tca9548a
 
-#broker = "83.226.147.68"
-broker = "tcp://83.226.147.68:1883"
+broker = "83.226.147.68"
+#broker = "tcp://83.226.147.68:1883"
 
 #Publish format (JSON string)
 #{
