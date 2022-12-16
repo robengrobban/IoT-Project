@@ -87,6 +87,7 @@ client.loop_start()
 
 # Loop that publishes message
 while True:
+    
 	rgb = get_rgb()
 	prox = get_proximity()
 	payload = str(rgb) + "|" + str(prox)
