@@ -7,12 +7,12 @@ import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 
 
+broker = "test.mosquitto.org"                               # Test Broker.
+#broker = "tcp://83.226.147.68:1883"                        # Broker IP, used when publishing sensory data
+topic = "carriage/id"                                       # Doublecheck this value
 
-broker = "83.226.147.68"                                    # Broker IP, used when publishing sensory data
-topic = "train/carriage/sensors"                            # oublecheck this
 
-
-i2c= board.I2C(board.SCL, board.SDA)                        # Init board
+i2c= board.I2C()                                            # Init board
 #sensor_prox = adafruit_vcnl4010.VCNL4010(i2c)	            # Init proximity sensor. Needed?
 
 
@@ -71,8 +71,6 @@ print("Attempting to connect to broker " + broker)
 client.connect(broker)	                                       # Broker address, port and keepalive (maximum period in seconds allowed between communications with the broker)
 client.loop_start()
 
-
-
 ############### Data processing and publishing ################## 
 
 totalSeats = 2                                                # totalSeats is hardcoded to "2" for our prototype since we only have two sensors per carriage. Maybe derive from sensor scan?
@@ -85,7 +83,7 @@ for each_seat in range (totalSeats):                          # Create a list wi
 print("initialized list:",sensordata_list)
 
 
-while True: # Loop and read proximity from sensor_prox_first and ssensor_prox_second
+while True: # Loop and read proximity from sensor_prox_first and sensor_prox_second
    
     prox_first = get_proximity(sensor_prox_first)
     prox_second  = get_proximity(sensor_prox_second)
@@ -109,4 +107,5 @@ while True: # Loop and read proximity from sensor_prox_first and ssensor_prox_se
     carriage_json = json.dumps(carriage_status)             # Convert dict to json string
     payload=carriage_json
     client.publish(topic, str(payload))                     # Publish
+    print(payload)
     time.sleep(1.0)
