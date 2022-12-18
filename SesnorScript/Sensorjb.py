@@ -18,16 +18,16 @@ i2c= board.I2C()                                            # Init board
 
 ############### Multiplexer section ##################
 sensorlist=list()
-tca = adafruit_tca9548a.TCA9548A(i2c)                       # Init multiplexer
-for channel in range(8):                                    # Scan the multiplexer for sensors with addresses. Copied form tutorial
-    if tca[channel].try_lock():                             # Channels are numbered 0-7
+tca = adafruit_tca9548a.TCA9548A(i2c)                                       # Init multiplexer
+for channel in range(8):                                                    # Scan the multiplexer for sensors with addresses. Copied form tutorial
+    if tca[channel].try_lock():                                             # Channels are numbered 0-7
         print("Channel {}:".format(channel), end="")
         addresses = tca[channel].scan()
         print([hex(address) for address in addresses if address != 0x70])
-        for address in addresses:
+        for address in addresses:                                           #Stores all detected values (except 112/0x70) in a separate list, sensorlist
             if address !=0x70:
                 sensorlist.append(address)
-        print(sensorlist)
+        #print(sensorlist)
         tca[channel].unlock()
 
 totalSeats= len(sensorlist)
@@ -80,7 +80,6 @@ client.loop_start()
 
 ############### Data processing and publishing ################## 
 
-totalSeats = 2                                                # totalSeats is hardcoded to "2" for our prototype since we only have two sensors per carriage. Maybe derive from sensor scan?
 occupiedSeats=int                                             # Will be calculated from senory data
 availableSeats=int                                            # will be derived later
 sensordata_list = list()                                       #
