@@ -4,7 +4,7 @@ import board
 import adafruit_vcnl4010
 import adafruit_tca9548a
 import paho.mqtt.client as mqtt
-import paho.mqtt.publish as publish
+#import paho.mqtt.publish as publish
 
 
 broker = "test.mosquitto.org"                               # Test Broker.
@@ -31,7 +31,7 @@ for channel in range(8):                                                    # Sc
         tca[channel].unlock()
 
 totalSeats= len(sensorlist)
-print("Total no. of detected seats/sensors: ", totalSeats)    
+print("\nTotal no. of detected seats/sensors: ", totalSeats, "\n")
 
         
 ############### Sensor section ##################
@@ -85,7 +85,7 @@ availableSeats=int                                            # will be derived 
 sensordata_list = list()                                       #
 for each_seat in range (totalSeats):                          # Create a list with length totalSeats  with "NoN" as dummy value fpr each index
     sensordata_list.append("NoN")                             # maybe skip this loop and just append?
-    print(sensordata_list)
+    #print(sensordata_list)
 print("initialized list:",sensordata_list)
 
 
