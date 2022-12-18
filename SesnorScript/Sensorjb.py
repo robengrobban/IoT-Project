@@ -17,15 +17,22 @@ i2c= board.I2C()                                            # Init board
 
 
 ############### Multiplexer section ##################
-
+sensorlist=list()
 tca = adafruit_tca9548a.TCA9548A(i2c)                       # Init multiplexer
-
 for channel in range(8):                                    # Scan the multiplexer for sensors with addresses. Copied form tutorial
     if tca[channel].try_lock():                             # Channels are numbered 0-7
         print("Channel {}:".format(channel), end="")
         addresses = tca[channel].scan()
         print([hex(address) for address in addresses if address != 0x70])
+        for address in addresses:
+            if address !=0x70:
+                sensorlist.append(address)
+        print(sensorlist)
         tca[channel].unlock()
+
+totalSeats= len(sensorlist)
+print("Total no. of detected seats/sensors: ", totalSeats)    
+
         
 ############### Sensor section ##################
 
