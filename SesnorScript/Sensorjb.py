@@ -86,7 +86,7 @@ sensordata_list = list()                                       #
 for each_seat in range (totalSeats):                          # Create a list with length totalSeats  with "NoN" as dummy value fpr each index
     sensordata_list.append("NoN")                             # maybe skip this loop and just append?
     #print(sensordata_list)
-print("initialized list:",sensordata_list)
+#print("initialized list:",sensordata_list)
 
 
 while True: # Loop and read proximity from sensor_prox_first and sensor_prox_second
