@@ -87,7 +87,7 @@ def on_message(client, userdata, message):
 #topic: train/{id} --> trian/1 in this case
 
 #publsihing the information
-clinet.publish("id", "Train Number" qos= 0)
+clinet.publish("id", "train" qos= 0)
 
 clinet.subscribe("crowdedness", qos= 0)
 
