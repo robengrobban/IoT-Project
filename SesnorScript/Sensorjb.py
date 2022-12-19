@@ -6,10 +6,11 @@ import adafruit_tca9548a
 import paho.mqtt.client as mqtt
 #import paho.mqtt.publish as publish
 
+id = 1
 
 #broker = "test.mosquitto.org"                               # Test Broker.
 broker = "83.226.147.68"                                   # Broker IP, used when publishing sensory data
-topic = "carriage/1"                                       # Doublecheck this value
+topic = "carriage/"+str(id)                                       # Doublecheck this value
 
 i2c = board.I2C()                                            # Init board
 
@@ -106,7 +107,7 @@ while True: # Loop and read proximity from sensor_prox_first and sensor_prox_sec
     
     #add datetime?
     carriage_status = {                                      # Create a dict to contain values
-        "id": "1",                                           # Carriage ID. Hardcoded value
+        "id": id,                                           # Carriage ID. Hardcoded value
         "occupiedSeats": occupiedSeats,     
         "availableSeats": availableSeats,
         "totalSeats": totalSeats
