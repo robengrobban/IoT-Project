@@ -76,7 +76,7 @@ public class PlatformActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    // TODO: Handle failure
+                    System.out.println("Connection Failure");
                 }
             });
         } catch (MqttException e) {
@@ -95,7 +95,7 @@ public class PlatformActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    // TODO: Handle failure
+                    System.out.println("Subscription Failure");
                 }
             });
         } catch (MqttException e) {
@@ -107,19 +107,13 @@ public class PlatformActivity extends AppCompatActivity {
         return new MqttCallback() {
             @Override
             public void connectionLost(Throwable cause) {
-
+                System.out.println("Connection Lost");
             }
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
                 String json = message.toString();
                 JSONObject root = new JSONObject(json);
-
-                int trainId = root.getJSONObject("train").getInt("id");
-                if ( trainId != trainView.getTrain().getId() ) {
-                    // TODO: Handle wrong train
-                    return;
-                }
 
                 JSONArray carriages = root.getJSONArray("carriages");
                 for (int i = 0; i < carriages.length(); i++) {

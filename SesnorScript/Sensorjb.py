@@ -7,9 +7,9 @@ import paho.mqtt.client as mqtt
 #import paho.mqtt.publish as publish
 
 
-broker = "test.mosquitto.org"                               # Test Broker.
-#broker = "83.226.147.68"                                   # Broker IP, used when publishing sensory data
-topic = "carriage/id"                                       # Doublecheck this value
+#broker = "test.mosquitto.org"                               # Test Broker.
+broker = "83.226.147.68"                                   # Broker IP, used when publishing sensory data
+topic = "carriage/1"                                       # Doublecheck this value
 
 i2c = board.I2C()                                            # Init board
 
