@@ -104,10 +104,12 @@ while True: # Loop and read proximity from sensor_prox_first and sensor_prox_sec
     occupiedSeats = sensordata_list.count(True)
     availableSeats = totalSeats - occupiedSeats
     
+    #add datetime?
     carriage_status = {                                      # Create a dict to contain values
         "id": "1",                                           # Carriage ID. Hardcoded value
         "occupiedSeats": occupiedSeats,     
-        "availableSeats": availableSeats
+        "availableSeats": availableSeats,
+        "totalSeats": totalSeats
     }
     carriage_json = json.dumps(carriage_status)             # Convert dict to json string
     payload=carriage_json
