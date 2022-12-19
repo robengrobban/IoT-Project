@@ -113,6 +113,6 @@ while True: # Loop and read proximity from sensor_prox_first and sensor_prox_sec
     }
     carriage_json = json.dumps(carriage_status)             # Convert dict to json string
     payload=carriage_json
-    client.publish(topic, str(payload))                     # Publish
+    client.publish(topic, str(payload), qos=0)                     # Publish
     print(payload)
     time.sleep(1.0)
