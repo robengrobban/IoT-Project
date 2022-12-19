@@ -143,6 +143,24 @@ m_in=json.loads(m_decode) #decode json data
 print(type(m_in))
 print("broker address = ",m_in["broker"])
 
+
+#Converting to json
+clinet= mqtt.Client()
+clinet.connect('83.226.147.68', 1883)
+data= {'carriageData' : 'trainId'}
+json_data= json.dumps(data)
+clinet.publish('carriageData', 'trainId', json_data)
+clinet.disconnect()
+
+#Not sure but could be
+clinet= mqtt.Client()
+clinet.connect('83.226.147.68', 1883)
+data= {'getTrain'}
+json_data= json.dumps(data)
+clinet.publish('getTrain', json_data)
+clinet.disconnect()
+
+
 #Using getTrain(id) would result in a python dictonary with this information
 #{
 #	"train":{"id":1},
