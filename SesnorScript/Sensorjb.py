@@ -11,9 +11,7 @@ broker = "test.mosquitto.org"                               # Test Broker.
 #broker = "tcp://83.226.147.68:1883"                        # Broker IP, used when publishing sensory data
 topic = "carriage/id"                                       # Doublecheck this value
 
-
 i2c= board.I2C()                                            # Init board
-#sensor_prox = adafruit_vcnl4010.VCNL4010(i2c)	            # Init proximity sensor. Needed?
 
 
 ############### Multiplexer section ##################
