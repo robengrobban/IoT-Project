@@ -85,6 +85,12 @@ def on_message(client, userdata, message):
 #data onto each train that is stores information about. Down here is the format for the published data, which will be as a JSON object.
 #Publish format
 #topic: train/{id} --> trian/1 in this case
+
+#publsihing the information
+clinet.publish("id", "Train Number" qos= 0)
+
+clinet.subscribe("crowdedness", qos= 0)
+
 #{
 #	"train":{"id":1},
 #	"carriages":[
