@@ -71,8 +71,8 @@ def getTrain(id):
 def updateCarriage(id, crowdedness):
     carriages[id]['crowdedness'] = crowdedness
 
-updateCarriage(1, 0.5)
-print(getTrain(1))
+#updateCarriage(1, 0.5)
+#print(getTrain(1))
 
 #Subscribe to topics related to each carriage
 #Each carriage will publish data on carriate/{id} <-- with their id. The edge controller will gather that data (we are not sure how it will look right
