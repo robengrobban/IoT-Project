@@ -91,12 +91,21 @@ clinet.publish("id", "Train Number" qos= 0)
 
 clinet.subscribe("crowdedness", qos= 0)
 
-#{
-#	"train":{"id":1},
-#	"carriages":[
-#		{"id":1,"position":1,"train_id":1,"crowdedness":0.10},
-#		{"id":2,"position":2,"train_id":1,"crowdedness":0.60}
-#	]
-#}
+topic= message.topic
+m_decode= str(message.payload.decode("utf-8", "ignore"))
+print("data received type", type(m_decode))
+print("data received", m_decode)
+print("converting from json to object")
+m_in=json.loads(m_decode) #decode json data
+print(type(m_in))
+print("broker address = ",m_in["broker"])
+
+{
+	"train":{"id":1},
+	"carriages":[
+		{"id":1,"position":1,"train_id":1,"crowdedness":0.10},
+		{"id":2,"position":2,"train_id":1,"crowdedness":0.60}
+	]
+}
 
 
