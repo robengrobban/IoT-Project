@@ -33,7 +33,46 @@ carriageData = requests.get(url="http://iot.studentenfix.se/carriage/").json()
 
 print(json.dumps(carriageData, indent=2))
 
+trains = dict()
+carriages = dict()
 
+for carriage in carriageData:
+    print(carriage)
+    
+    trainId = carriage['train_id']
+    if trainId not in trains:
+        trains[trainId] = {
+            'id': trainId,
+            'carriages': []
+        }
+    
+    trains[trainId]['carriages'].append(carriage['id'])
+
+    carriageId = carriage['id']
+    carriages[carriageId] = {
+        'id': carriageId,
+        'position': carriage['position'],
+        'train_id': trainId,
+        'crowdedness': 0.0
+    }
+
+def getTrain(id):
+    train = trains[id]
+    carriagesId = train['carriages']
+    print(carriagesId)
+
+    train['carriages'] = []
+
+    for i in carriagesId:
+        train['carriages'].append(carriages[i])
+
+    return train
+
+def updateCarriage(id, crowdedness):
+    carriages[id]['crowdedness'] = crowdedness
+
+updateCarriage(1, 0.5)
+print(getTrain(1))
 
 #Subscribe to topics related to each carriage
 #Each carriage will publish data on carriate/{id} <-- with their id. The edge controller will gather that data (we are not sure how it will look right
@@ -48,15 +87,18 @@ clinet= mqtt.Client()
 clinet.connect(broker)
 
 #subscribing to the topic 
-clinet.subscribe("id", qos= 0)
+for id in carriages:
+    print("Subscribing to: " + "carriage/"+str(id))
+    clinet.subscribe("carriage/"+str(id), qos= 0)
 
-def on_connect(client, uderdata, flags, rc)
+def on_connect(client, uderdata, flags, rc):
+    print("Connected " + str(rc))
 
 def on_message(client, userdata, message):
     data= (str(msg.payload.decode("utf-8")))
     json_object= json.loads(data)
     print(json_object)
-    print(json_object['id'], json_object['AvailableSeats'], json_object['OccupiedSeats'])
+    print(json_object['id'], json_object['availableSeats'], json_object['occupiedSeats'])
 
     #printing the message payload
     print(message.payload)
@@ -87,6 +129,7 @@ def on_message(client, userdata, message):
 #topic: train/{id} --> trian/1 in this case
 
 #publsihing the information
+
 clinet.publish("id", "train" qos= 0)
 
 clinet.subscribe("crowdedness", qos= 0)
@@ -100,12 +143,13 @@ m_in=json.loads(m_decode) #decode json data
 print(type(m_in))
 print("broker address = ",m_in["broker"])
 
-{
-	"train":{"id":1},
-	"carriages":[
-		{"id":1,"position":1,"train_id":1,"crowdedness":0.10},
-		{"id":2,"position":2,"train_id":1,"crowdedness":0.60}
-	]
-}
+#Using getTrain(id) would result in a python dictonary with this information
+#{
+#	"train":{"id":1},
+#	"carriages":[
+#		{"id":1,"position":1,"train_id":1,"crowdedness":0.10},
+#		{"id":2,"position":2,"train_id":1,"crowdedness":0.60}
+#	]
+#}
 
 
