@@ -91,6 +91,7 @@ while True: # Loop and read proximity from sensor_prox_first and sensor_prox_sec
    
     prox_first = get_proximity(sensor_prox_first)
     prox_second  = get_proximity(sensor_prox_second)
+# to do: build a dynamically populated list of variables 
 
     if prox_first <=2600:                                   # Find a better way to loop over sensors and populate the list?
         sensordata_list[0] = False                          # Populates a list with 2 elements (index 0 is for first sensor and index 1 is for second sensor) 
