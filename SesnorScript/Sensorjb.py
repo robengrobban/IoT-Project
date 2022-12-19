@@ -6,14 +6,13 @@ import adafruit_tca9548a
 import paho.mqtt.client as mqtt
 #import paho.mqtt.publish as publish
 
+id = 1
 
-broker = "test.mosquitto.org"                               # Test Broker.
-#broker = "tcp://83.226.147.68:1883"                        # Broker IP, used when publishing sensory data
-topic = "carriage/id"                                       # Doublecheck this value
+#broker = "test.mosquitto.org"                               # Test Broker.
+broker = "83.226.147.68"                                   # Broker IP, used when publishing sensory data
+topic = "carriage/"+str(id)                                       # Doublecheck this value
 
-
-i2c= board.I2C()                                            # Init board
-#sensor_prox = adafruit_vcnl4010.VCNL4010(i2c)	            # Init proximity sensor. Needed?
+i2c = board.I2C()                                            # Init board
 
 
 ############### Multiplexer section ##################
@@ -93,6 +92,7 @@ while True: # Loop and read proximity from sensor_prox_first and sensor_prox_sec
    
     prox_first = get_proximity(sensor_prox_first)
     prox_second  = get_proximity(sensor_prox_second)
+# to do: build a dynamically populated list of variables 
 
     if prox_first <=2600:                                   # Find a better way to loop over sensors and populate the list?
         sensordata_list[0] = False                          # Populates a list with 2 elements (index 0 is for first sensor and index 1 is for second sensor) 
@@ -105,13 +105,15 @@ while True: # Loop and read proximity from sensor_prox_first and sensor_prox_sec
     occupiedSeats = sensordata_list.count(True)
     availableSeats = totalSeats - occupiedSeats
     
+    #add datetime?
     carriage_status = {                                      # Create a dict to contain values
-        "id": "1",                                           # Carriage ID. Hardcoded value
+        "id": id,                                           # Carriage ID. Hardcoded value
         "occupiedSeats": occupiedSeats,     
-        "availableSeats": availableSeats
+        "availableSeats": availableSeats,
+        "totalSeats": totalSeats
     }
     carriage_json = json.dumps(carriage_status)             # Convert dict to json string
     payload=carriage_json
-    client.publish(topic, str(payload))                     # Publish
+    client.publish(topic, str(payload), qos=0)                     # Publish
     print(payload)
     time.sleep(1.0)
