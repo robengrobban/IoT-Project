@@ -17,6 +17,7 @@ i2c = board.I2C()                                            # Init board
 
 ############### Multiplexer section ##################
 sensorlist=list()
+prox_list = list()
 tca = adafruit_tca9548a.TCA9548A(i2c)                                       # Init multiplexer
 for channel in range(8):                                                    # Scan the multiplexer for sensors with addresses. Copied form tutorial
     if tca[channel].try_lock():                                             # Channels are numbered 0-7
@@ -26,6 +27,7 @@ for channel in range(8):                                                    # Sc
         for address in addresses:                                           #Stores all detected values (except 112/0x70) in a separate list, sensorlist
             if address !=0x70:
                 sensorlist.append(address)
+                prox_list.append( adafruit_vcnl4010.VCNL4010(address) )
         #print(sensorlist)
         tca[channel].unlock()
 
