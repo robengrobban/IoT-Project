@@ -5,14 +5,36 @@ import adafruit_vcnl4010
 import adafruit_tca9548a
 import paho.mqtt.client as mqtt
 #import paho.mqtt.publish as publish
+import sys 
 
-id = 1
+############## commandline argument (carriage id) section ##############
 
-#broker = "test.mosquitto.org"                               # Test Broker.
-broker = "83.226.147.68"                                   # Broker IP, used when publishing sensory data
-topic = "carriage/"+str(id)                                       # Doublecheck this value
+if len(sys.argv) <=1:
+    print("Please provide a carriage id as the first argument when running this script. /n cdExample: 'Scriptname.py, ID'")
+    exit()
 
-i2c = board.I2C()                                            # Init board
+
+if len(sys.argv) >2:
+    print("Too many arguments provided, use just one argument. /n cdExample: 'Scriptname.py, ID'")
+    exit()
+
+else:
+    print("Script name: ", sys.argv[0])
+    for i in range(1, len(sys.argv)):                                           # parse argv string
+        print('Argument:', i, 'value:', sys.argv[i])
+        id = sys.argv[i]
+
+
+id=sys.argv[1]
+print("id used: ", id)                                                      # Sets the variable id to the first argument passed along from the commandline  to the script (e.g "Sensorjb 'arg'" )
+
+############## hw init section ##############
+
+#broker = "test.mosquitto.org"                                              # Test Broker.
+broker = "83.226.147.68"                                                    # Broker IP, used when publishing sensory data
+topic = "carriage/"+str(id)                                                 # Doublecheck this value
+
+i2c = board.I2C()                                                           # Init board
 
 
 ############### Multiplexer section ##################
@@ -108,7 +130,7 @@ while True: # Loop and read proximity from sensor_prox_first and sensor_prox_sec
     availableSeats = totalSeats - occupiedSeats
     
     #add datetime?
-    carriage_status = {                                      # Create a dict to contain values
+    carriage_status = {                                     # Create a dict to contain values
         "id": id,                                           # Carriage ID. Hardcoded value
         "occupiedSeats": occupiedSeats,     
         "availableSeats": availableSeats,
@@ -116,6 +138,6 @@ while True: # Loop and read proximity from sensor_prox_first and sensor_prox_sec
     }
     carriage_json = json.dumps(carriage_status)             # Convert dict to json string
     payload=carriage_json
-    client.publish(topic, str(payload), qos=0)                     # Publish
+    client.publish(topic, str(payload), qos=0)              # Publish
     print(payload)
     time.sleep(1.0)
