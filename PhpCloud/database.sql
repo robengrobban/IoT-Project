@@ -22,12 +22,6 @@ CREATE TABLE platform_sensors (
     FOREIGN KEY (platform_name) REFERENCES platforms(name) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
-CREATE TABLE carriage_sensors (
-    uuid VARCHAR(36) NOT NULL PRIMARY KEY,
-    carriage_id INT UNSIGNED NOT NULL,
-    FOREIGN KEY (carriage_id) REFERENCES carriages(id) ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
 INSERT INTO trains () VALUES (), (), ();
 
 INSERT INTO carriages (train_id, position) VALUES (1, 1), (1, 2), (2, 1), (2, 2), (3, 1), (3, 2);
@@ -35,5 +29,3 @@ INSERT INTO carriages (train_id, position) VALUES (1, 1), (1, 2), (2, 1), (2, 2)
 INSERT INTO platforms (name, length) VALUES ('Kista', 6), ('T-Central', 6);
 
 INSERT INTO platform_sensors (uuid, platform_name, position, height) VALUES ('AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA', 'Kista', 0.25, 0), ('BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB', 'Kista', 0.5, 0), ('CCCCCCCC-CCCC-CCCC-CCCC-CCCCCCCCCCCC', 'Kista', 0.75, 0), ('DDDDDDDD-DDDD-DDDD-DDDD-DDDDDDDDDDDD', 'T-Central', 0.5, 0);
-
-INSERT INTO carriage_sensors (uuid, carriage_id) VALUES ('EEEEEEEE-EEEE-EEEE-EEEE-EEEEEEEEEEEE', 1), ('FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF', 2), ('GGGGGGGG-GGGG-GGGG-GGGG-GGGGGGGGGGGG', 3), ('HHHHHHHH-HHHH-HHHH-HHHH-HHHHHHHHHHHH', 4), ('IIIIIIII-IIII-IIII-IIII-IIIIIIIIIIII', 5), ('JJJJJJJJ-JJJJ-JJJJ-JJJJ-JJJJJJJJJJJJ', 6);
