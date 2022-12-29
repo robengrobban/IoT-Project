@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
         RangedBeacon.setSampleExpirationMilliseconds(3000);
         beaconManager = BeaconManager.getInstanceForApplication(this);
         beaconManager.setForegroundBetweenScanPeriod(0);
-        beaconManager.setForegroundScanPeriod(300);
+        beaconManager.setForegroundScanPeriod(100);
         beaconManager.setBackgroundBetweenScanPeriod(0);
-        beaconManager.setBackgroundScanPeriod(300);
+        beaconManager.setBackgroundScanPeriod(100);
         beaconManager.startRangingBeacons(new Region("UserRegion", null, null, null));
 
     }
