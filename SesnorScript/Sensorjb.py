@@ -10,12 +10,12 @@ import sys
 ############## commandline argument (carriage id) section ##############
 
 if len(sys.argv) <=1:
-    print("Please provide a carriage id as the first argument when running this script. /n cdExample: 'Scriptname.py, ID'")
+    print("Please provide a carriage id as the first argument when running this script. \nExample: 'Scriptname.py, ID'")
     exit()
 
 
 if len(sys.argv) >2:
-    print("Too many arguments provided, use just one argument. /n cdExample: 'Scriptname.py, ID'")
+    print("Too many arguments provided, use just one argument. \nExample: 'Scriptname.py, ID'")
     exit()
 
 else:
