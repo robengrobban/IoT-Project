@@ -7,7 +7,7 @@ import paho.mqtt.client as mqtt
 #import paho.mqtt.publish as publish
 import sys 
 
-############## commandline argument (carriage id) section ##############
+############## Commandline argument (carriage id) section ##############
 
 if len(sys.argv) <=1:
     print("Please provide a carriage id as the first argument when running this script. \nExample: 'Scriptname.py, ID'")
@@ -20,19 +20,19 @@ if len(sys.argv) >2:
 
 else:
     print("Script name: ", sys.argv[0])
-    for i in range(1, len(sys.argv)):                                           # parse argv string
+    for i in range(1, len(sys.argv)):                                       # Parses argv string from sys.argv[1] 
         print('Argument:', i, 'value:', sys.argv[i])
         id = sys.argv[i]
 
 
-id=sys.argv[1]
-print("id used: ", id)                                                      # Sets the variable id to the first argument passed along from the commandline  to the script (e.g "Sensorjb 'arg'" )
+id=sys.argv[1]                                                              # sys.argv[0] contains filename, sys.argv[1] is the id passed along
+print("CarriageId used: ", id)                                              # Sets the variable id to the first argument passed along from the commandline  to the script (e.g "Sensorjb 'arg'" )
 
 ############## hw init section ##############
 
 #broker = "test.mosquitto.org"                                              # Test Broker.
 broker = "83.226.147.68"                                                    # Broker IP, used when publishing sensory data
-topic = "carriage/"+str(id)                                                 # Doublecheck this value
+topic = "carriage/"+str(id)                                                 
 print("topic: ", topic)
 
 i2c = board.I2C()                                                           # Init board
