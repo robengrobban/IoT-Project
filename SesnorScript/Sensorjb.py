@@ -33,6 +33,7 @@ print("id used: ", id)                                                      # Se
 #broker = "test.mosquitto.org"                                              # Test Broker.
 broker = "83.226.147.68"                                                    # Broker IP, used when publishing sensory data
 topic = "carriage/"+str(id)                                                 # Doublecheck this value
+print("topic: ", topic)
 
 i2c = board.I2C()                                                           # Init board
 
