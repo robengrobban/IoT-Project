@@ -40,7 +40,9 @@ i2c = board.I2C()                                                           # In
 
 ############### Multiplexer section ##################
 sensorlist=list()
-prox_list = list()
+channellist=list()                                                          # list to contain channel numbers. could probably use key:value pairs instead of two lists
+
+#proxvalues = list()
 tca = adafruit_tca9548a.TCA9548A(i2c)                                       # Init multiplexer
 for channel in range(8):                                                    # Scan the multiplexer for sensors with addresses. Copied form tutorial
     if tca[channel].try_lock():                                             # Channels are numbered 0-7
@@ -50,14 +52,14 @@ for channel in range(8):                                                    # Sc
         for address in addresses:                                           #Stores all detected values (except 112/0x70) in a separate list, sensorlist
             if address !=0x70:
                 sensorlist.append(address)
-                #prox_list.append( adafruit_vcnl4010.VCNL4010(address) )
+                channellist.append(channel)                                 # list containing channel numbers
+                #print(channellist)
         #print(sensorlist)
         tca[channel].unlock()
 
 totalSeats= len(sensorlist)
 print("\nTotal no. of detected seats/sensors: ", totalSeats, "\n")
 
-        
 ############### Sensor section ##################
 
 sensor_prox_first = adafruit_vcnl4010.VCNL4010(tca[1])      # First sensor. Hardcoded to channel 1 from previous channel scan
@@ -97,7 +99,7 @@ client.on_disconnect = on_disconnect
 client.on_publish = on_publish
 client.on_log = on_log
 
-#Connect to MQTT 
+# Connect to MQTT 
 print("Attempting to connect to broker " + broker)
 client.connect(broker)	                                       # Broker address, port and keepalive (maximum period in seconds allowed between communications with the broker)
 client.loop_start()
@@ -108,13 +110,26 @@ occupiedSeats=int                                             # Will be calculat
 availableSeats=int                                            # will be derived later
 sensordata_list = list()                                       #
 for each_seat in range (totalSeats):                          # Create a list with length totalSeats  with "NoN" as dummy value fpr each index
-    sensordata_list.append("NoN")                             # maybe skip this loop and just append?
+    sensordata_list.append("NoN")                             # maybe skip this loop and just append values/bools and reset it for eac loop while true?
     #print(sensordata_list)
 #print("initialized list:",sensordata_list)
 
 
-while True: # Loop and read proximity from sensor_prox_first and sensor_prox_second
-   
+
+""" NOT TESTED LOOP FOR GETTING SENSOR VALUES BASED ON THE CHANNEL SCAN 
+while True: 
+    sensordata_list=()
+    for i in range(len(channellist)):
+        number=channellist[i]
+        sensor_prox = adafruit_vcnl4010.VCNL4010(tca[number])     # merge with next line?
+        get_proximity(sensor_prox)
+        if sensor_prox <=2600:                                   
+            sensordata_list.append(False)                         # Populates a list with i elements (index 0 is for first sensor and index 1 is for second sensor) 
+        else: sensordata_list.append(True)
+
+        #mby store values and count all values below or above treshold instead of coverting to booleans
+    """
+while True:
     prox_first = get_proximity(sensor_prox_first)
     prox_second  = get_proximity(sensor_prox_second)
 
