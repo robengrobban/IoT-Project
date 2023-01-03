@@ -120,12 +120,13 @@ for each_seat in range (totalSeats):                          # Create a list wi
 while True: 
     sensordata_list=()
     for i in range(len(channellist)):
-        number=channellist[i]
+        number=channellist[i]                                     # cehck that it starts with index[0]
         sensor_prox = adafruit_vcnl4010.VCNL4010(tca[number])     # merge with next line?
-        get_proximity(sensor_prox)
-        if sensor_prox <=2600:                                   
+        prox_val = get_proximity(sensor_prox)
+        if prox_val <=2600:                                   
             sensordata_list.append(False)                         # Populates a list with i elements (index 0 is for first sensor and index 1 is for second sensor) 
-        else: sensordata_list.append(True)
+        else: 
+            sensordata_list.append(True)
 
         #mby store values and count all values below or above treshold instead of coverting to booleans
     """
@@ -136,11 +137,13 @@ while True:
 
     if prox_first <=2600:                                   # Find a better way to loop over sensors and populate the list?
         sensordata_list[0] = False                          # Populates a list with 2 elements (index 0 is for first sensor and index 1 is for second sensor) 
-    else: sensordata_list[0]=True                           # Values are either False or True and I have used arbitrarily chosen values as conditions.
+    else: 
+        sensordata_list[0]=True                           # Values are either False or True and I have used arbitrarily chosen values as conditions.
                                                             # True if sensor value is greater than 2600, meaning the seat is occupied.
     if prox_second <=2600:                                  # False if the sensor value is eqyualt to or less than 2600, menaning the seat is not occupied.
         sensordata_list[1]=False
-    else: sensordata_list[1]=True
+    else: 
+        sensordata_list[1]=True
     
     occupiedSeats = sensordata_list.count(True)
     availableSeats = totalSeats - occupiedSeats
