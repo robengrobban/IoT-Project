@@ -13,7 +13,6 @@ if len(sys.argv) <=1:
     print("Please provide a carriage id as the first argument when running this script. \nExample: 'Scriptname.py, ID'")
     exit()
 
-
 if len(sys.argv) >2:
     print("Too many arguments provided, use just one argument. \nExample: 'Scriptname.py, ID'")
     exit()
@@ -160,8 +159,11 @@ while True:
     time.sleep(1.0)
 
     # What this script is aimed to do:
+    #
     # takes the carriageID as an argument from the operator at startup.
-    # Scans multiplexer for sensors via channels and addresses. 
+    # scans multiplexer for sensors via channels and addresses. 
     # loops dynamically over detected channels to collect data
     # processes data into actionable information and convert to json payload
     # publishes information with a broker under topic carriage/id.
+    # 
+    # Be open ended, scalable and adaptable
