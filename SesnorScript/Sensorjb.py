@@ -49,9 +49,9 @@ for channel in range(8):                                                    # Sc
         print("Channel {}:".format(channel), end="")
         addresses = tca[channel].scan()
         print([hex(address) for address in addresses if address != 0x70])
-        for address in addresses:                                           #Stores all detected values (except 112/0x70) in a separate list, sensorlist
+        for address in addresses:                                           # selects all detected values (except 112/0x70 which is the multiplexer address)
             if address !=0x70:
-                sensorlist.append(address)
+                sensorlist.append(address)                                  # list containing sensor addresses
                 channellist.append(channel)                                 # list containing channel numbers
                 #print(channellist)
         #print(sensorlist)
@@ -104,13 +104,13 @@ print("Attempting to connect to broker " + broker)
 client.connect(broker)	                                       # Broker address, port and keepalive (maximum period in seconds allowed between communications with the broker)
 client.loop_start()
 
-############### Data processing and publishing ################## 
+########### Data processing and publishing ############# 
 
-occupiedSeats=int                                             # Will be calculated from senory data
-availableSeats=int                                            # will be derived later
-sensordata_list = list()                                       #
-for each_seat in range (totalSeats):                          # Create a list with length totalSeats  with "NoN" as dummy value fpr each index
-    sensordata_list.append("NoN")                             # maybe skip this loop and just append values/bools and reset it for eac loop while true?
+occupiedSeats=int                                               # Will be calculated from senory data
+availableSeats=int                                              # will be derived later
+sensordata_list = list()                                        #
+for each_seat in range (totalSeats):                            # Create a list with length totalSeats  with "NoN" as dummy value fpr each index
+    sensordata_list.append("NoN")                               # maybe skip this loop and just append values/bools and reset it for eac loop while true?
     #print(sensordata_list)
 #print("initialized list:",sensordata_list)
 
@@ -138,7 +138,7 @@ while True:
     if prox_first <=2600:                                   # Find a better way to loop over sensors and populate the list?
         sensordata_list[0] = False                          # Populates a list with 2 elements (index 0 is for first sensor and index 1 is for second sensor) 
     else: 
-        sensordata_list[0]=True                           # Values are either False or True and I have used arbitrarily chosen values as conditions.
+        sensordata_list[0]=True                             # Values are either False or True and I have used arbitrarily chosen values as conditions.
                                                             # True if sensor value is greater than 2600, meaning the seat is occupied.
     if prox_second <=2600:                                  # False if the sensor value is eqyualt to or less than 2600, menaning the seat is not occupied.
         sensordata_list[1]=False
@@ -159,3 +159,10 @@ while True:
     client.publish(topic, str(payload), qos=0)              # Publish
     print(payload)
     time.sleep(1.0)
+
+    # What this script is aimed to do:
+    # takes the carriageID as an argument from the operator at startup.
+    # Scans multiplexer for sensors via channels and addresses. 
+    # loops dynamically over detected channels to collect data
+    # processes data into actionable information and convert to json payload
+    # publishes information with a broker under topic carriage/id.
