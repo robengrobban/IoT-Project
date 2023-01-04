@@ -22,8 +22,8 @@ else:
     print("Script name: ", sys.argv[0])
     for i in range(1, len(sys.argv)):                                       # Parses argv string from sys.argv[1] 
         print('Argument:', i, 'value:', sys.argv[i])
-        id = sys.argv[i]
-
+        id = sys.argv[i]                                                    # assigns the last argument found to id (but we make sure we only get two arguments so the index i is fixed as "1" in practice)
+# to do: change id to carriageID for clarity
 
 id=sys.argv[1]                                                              # sys.argv[0] contains filename, sys.argv[1] is the id passed along
 print("CarriageId used: ", id)                                              # Sets the variable id to the first argument passed along from the commandline  to the script (e.g "Sensorjb 'arg'" )
@@ -42,7 +42,6 @@ i2c = board.I2C()                                                           # In
 sensorlist=list()
 channellist=list()                                                          # list to contain channel numbers. could probably use key:value pairs instead of two lists
 
-#proxvalues = list()
 tca = adafruit_tca9548a.TCA9548A(i2c)                                       # Init multiplexer
 for channel in range(8):                                                    # Scan the multiplexer for sensors with addresses. Copied form tutorial
     if tca[channel].try_lock():                                             # Channels are numbered 0-7
@@ -149,7 +148,7 @@ while True:
     availableSeats = totalSeats - occupiedSeats
     
     carriage_status = {                                     # Create a dict to contain values
-        "id": id,                                           # Carriage ID. Hardcoded value
+        "id": id,                                           
         "occupiedSeats": occupiedSeats,     
         "availableSeats": availableSeats,
         "totalSeats": totalSeats
