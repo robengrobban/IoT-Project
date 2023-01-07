@@ -20,7 +20,7 @@ else:
     print("Script name: ", sys.argv[0])
     for i in range(1, len(sys.argv)):                                       # Parses argv string from sys.argv[1] 
         print('Argument:', i, 'value:', sys.argv[i])
-        id = sys.argv[i]                                                    # assigns the last argument found to id (but we make sure we only get two arguments so the index i is fixed as "1" in practice)
+        id = sys.argv[i]                                                    # Assigns the last argument found to id (but we make sure we only get two arguments so the index i is fixed as "1" in practice)
                                                                             # to do: change id to carriageID for clarity?
 
 id=sys.argv[1]                                                              # sys.argv[0] contains filename, sys.argv[1] is the id passed along
@@ -45,7 +45,7 @@ for channel in range(8):                                                    # Sc
         print("Channel {}:".format(channel), end="")
         addresses = tca[channel].scan()
         print([hex(address) for address in addresses if address != 0x70])
-        for address in addresses:                                           # selects all detected values (except 112/0x70 which is the multiplexer address)
+        for address in addresses:                                           # Selects all detected values (except 112/0x70 which is the multiplexer address)
             if address !=0x70:
                 sensorlist.append(address)                                  # if address is not multiplexer addrees, append to list containing sensor addresses
                 channellist.append(channel)                                 # if address is not multiplexer addrees, append to list containing channel numbers
@@ -57,7 +57,7 @@ totalSeats= len(sensorlist)
 print("\nTotal no. of detected seats/sensors: ", totalSeats, "\n")
 
 ############### Sensor section ##################
-def get_proximity(sensor):                                  # Create a method for getting proximity data from a sensor.
+def get_proximity(sensor):                                                  
 	proximity = sensor.proximity
 	print('Proximity: {0}'.format(proximity))
 	return proximity
@@ -65,7 +65,7 @@ def get_proximity(sensor):                                  # Create a method fo
 
 ############### MQTT section ################## (from lab)
 
-# when connecting to mqtt do this;
+# when connecting to mqtt do this
 def on_connect(client, userdata, flags, rc):
 	if rc==0:
 		print("Connection established. Code: "+str(rc))
@@ -81,7 +81,7 @@ def on_disconnect(client, userdata, rc):
 	else:
 		print("Disconnected. Code: " + str(rc))
 	
-def on_log(client, userdata, level, buf):		                # Message is in buf
+def on_log(client, userdata, level, buf):		                            # Message is in buf
     print("MQTT Log: " + str(buf))
 
 # Connect functions for MQTT
@@ -93,7 +93,7 @@ client.on_log = on_log
 
 # Connect to MQTT 
 print("Attempting to connect to broker " + broker)
-client.connect(broker)	                                       # Broker address, port and keepalive (maximum period in seconds allowed between communications with the broker)
+client.connect(broker)	                                                    # Broker address, port and keepalive (maximum period in seconds allowed between communications with the broker)
 client.loop_start()
 
 ########### Data processing and publishing ############# 
@@ -102,24 +102,24 @@ while True:
     for i in range(len(channellist)):
         number=channellist[i]                                     
         #print("NUMBER: ", number)
-        sensor_prox = adafruit_vcnl4010.VCNL4010(tca[number])     # merge with next line?
-        prox_val = get_proximity(sensor_prox)                     # 
+        sensor_prox = adafruit_vcnl4010.VCNL4010(tca[number])               # Merge with next line?
+        prox_val = get_proximity(sensor_prox)                               # 
         if prox_val <=2600:                                   
-            sensordata_list.append(False)                         # Populates a list with i elements (index 0 is for first sensor and index 1 is for second sensor and so on) 
+            sensordata_list.append(False)                                   # Populates a list with i elements (index 0 is for first sensor and index 1 is for second sensor and so on) 
         else: 
-            sensordata_list.append(True)
+            sensordata_list.append(True)                                    # Could use values instead of bools and loop over them with a treshhold value to calculate occupiedSeats 
     occupiedSeats = sensordata_list.count(True)
     availableSeats = totalSeats - occupiedSeats
     
-    carriage_status = {                                     # Create a dict to contain values
+    carriage_status = {                                                     # Create a dict to contain values
         "id": id,                                           
         "occupiedSeats": occupiedSeats,     
         "availableSeats": availableSeats,
         "totalSeats": totalSeats
     }
-    carriage_json = json.dumps(carriage_status)             # Convert dict to json string
+    carriage_json = json.dumps(carriage_status)                             # Convert dict to json string
     payload=carriage_json
-    client.publish(topic, str(payload), qos=0)              # Publish
+    client.publish(topic, str(payload), qos=0)                              # Publish
     print(payload)
     time.sleep(1.0)
     
