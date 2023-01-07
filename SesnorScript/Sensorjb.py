@@ -21,7 +21,7 @@ else:
     for i in range(1, len(sys.argv)):                                       # Parses argv string from sys.argv[1] 
         print('Argument:', i, 'value:', sys.argv[i])
         id = sys.argv[i]                                                    # assigns the last argument found to id (but we make sure we only get two arguments so the index i is fixed as "1" in practice)
-# to do: change id to carriageID for clarity
+                                                                            # to do: change id to carriageID for clarity?
 
 id=sys.argv[1]                                                              # sys.argv[0] contains filename, sys.argv[1] is the id passed along
 print("CarriageId used: ", id)                                              # Sets the variable id to the first argument passed along from the commandline  to the script (e.g "Sensorjb 'arg'" )
@@ -37,7 +37,7 @@ i2c = board.I2C()                                                           # In
 
 ############### Multiplexer section ##################
 sensorlist=list()
-channellist=list()                                                          # list to contain channel numbers. could probably use key:value pairs instead of two lists
+channellist=list()                                                          
 
 tca = adafruit_tca9548a.TCA9548A(i2c)                                       # Init multiplexer
 for channel in range(8):                                                    # Scan the multiplexer for sensors with addresses. Copied form tutorial
@@ -47,8 +47,8 @@ for channel in range(8):                                                    # Sc
         print([hex(address) for address in addresses if address != 0x70])
         for address in addresses:                                           # selects all detected values (except 112/0x70 which is the multiplexer address)
             if address !=0x70:
-                sensorlist.append(address)                                  # list containing sensor addresses
-                channellist.append(channel)                                 # list containing channel numbers
+                sensorlist.append(address)                                  # if address is not multiplexer addrees, append to list containing sensor addresses
+                channellist.append(channel)                                 # if address is not multiplexer addrees, append to list containing channel numbers
                 #print(channellist)
         #print(sensorlist)
         tca[channel].unlock()
@@ -101,11 +101,11 @@ while True:
     sensordata_list=list()
     for i in range(len(channellist)):
         number=channellist[i]                                     
-        print("NUMBER: ", number)
+        #print("NUMBER: ", number)
         sensor_prox = adafruit_vcnl4010.VCNL4010(tca[number])     # merge with next line?
-        prox_val = get_proximity(sensor_prox)
+        prox_val = get_proximity(sensor_prox)                     # 
         if prox_val <=2600:                                   
-            sensordata_list.append(False)                         # Populates a list with i elements (index 0 is for first sensor and index 1 is for second sensor) 
+            sensordata_list.append(False)                         # Populates a list with i elements (index 0 is for first sensor and index 1 is for second sensor and so on) 
         else: 
             sensordata_list.append(True)
     occupiedSeats = sensordata_list.count(True)
