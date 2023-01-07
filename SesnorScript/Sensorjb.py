@@ -40,6 +40,7 @@ sensorlist=list()
 channellist=list()                                                          
 
 tca = adafruit_tca9548a.TCA9548A(i2c)                                       # Init multiplexer
+
 for channel in range(8):                                                    # Scan the multiplexer for sensors with addresses. Copied form tutorial
     if tca[channel].try_lock():                                             # Channels are numbered 0-7
         print("Channel {}:".format(channel), end="")
@@ -102,8 +103,8 @@ while True:
     for i in range(len(channellist)):
         number=channellist[i]                                     
         #print("NUMBER: ", number)
-        sensor_prox = adafruit_vcnl4010.VCNL4010(tca[number])               # Merge with next line?
-        prox_val = get_proximity(sensor_prox)                               # 
+        sensor_prox = adafruit_vcnl4010.VCNL4010(tca[number])                
+        prox_val = get_proximity(sensor_prox)                               
         if prox_val <=2600:                                   
             sensordata_list.append(False)                                   # Populates a list with i elements (index 0 is for first sensor and index 1 is for second sensor and so on) 
         else: 
