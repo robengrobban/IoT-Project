@@ -100,7 +100,7 @@ client.loop_start()
 while True: 
     sensordata_list=list()
     for i in range(len(channellist)):
-        number=channellist[i]                                     # check that it starts with index[0]
+        number=channellist[i]                                     
         print("NUMBER: ", number)
         sensor_prox = adafruit_vcnl4010.VCNL4010(tca[number])     # merge with next line?
         prox_val = get_proximity(sensor_prox)
