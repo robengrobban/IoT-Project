@@ -4,6 +4,7 @@ import board
 import adafruit_vcnl4010
 import adafruit_tca9548a
 import paho.mqtt.client as mqtt
+#import paho.mqtt.publish as publish
 import sys 
 
 ############## Commandline argument (carriage id) section ##############
@@ -32,6 +33,7 @@ print("CarriageId used: ", id)                                              # Se
 broker = "83.226.147.68"                                                    # Broker IP, used when publishing sensory data
 topic = "carriage/"+str(id)                                                 
 print("topic: ", topic)
+
 i2c = board.I2C()                                                           # Init board
 
 
@@ -57,6 +59,10 @@ totalSeats= len(sensorlist)
 print("\nTotal no. of detected seats/sensors: ", totalSeats, "\n")
 
 ############### Sensor section ##################
+
+sensor_prox_first = adafruit_vcnl4010.VCNL4010(tca[1])      # First sensor. Hardcoded to channel 1 from previous channel scan
+sensor_prox_second = adafruit_vcnl4010.VCNL4010(tca[6])     # Second sensor. Hardcoded to channel 6 from previous channel scan
+
 def get_proximity(sensor):                                  # Create a method for getting proximity data from a sensor.
 	proximity = sensor.proximity
 	print('Proximity: {0}'.format(proximity))
@@ -97,17 +103,46 @@ client.connect(broker)	                                       # Broker address, 
 client.loop_start()
 
 ########### Data processing and publishing ############# 
+
+occupiedSeats=int                                               # Will be calculated from senory data
+availableSeats=int                                              # will be derived later
+sensordata_list = list()                                        #
+for each_seat in range (totalSeats):                            # Create a list with length totalSeats  with "NoN" as dummy value fpr each index
+    sensordata_list.append("NoN")                               # maybe skip this loop and just append values/bools and reset it for eac loop while true?
+    #print(sensordata_list)
+#print("initialized list:",sensordata_list)
+
+
+
+""" NOT TESTED LOOP FOR GETTING SENSOR VALUES BASED ON THE CHANNEL SCAN 
 while True: 
-    sensordata_list=list()
+    sensordata_list=()
     for i in range(len(channellist)):
-        number=channellist[i]                                     # check that it starts with index[0]
-        print("NUMBER: ", number)
+        number=channellist[i]                                     # cehck that it starts with index[0]
         sensor_prox = adafruit_vcnl4010.VCNL4010(tca[number])     # merge with next line?
         prox_val = get_proximity(sensor_prox)
         if prox_val <=2600:                                   
             sensordata_list.append(False)                         # Populates a list with i elements (index 0 is for first sensor and index 1 is for second sensor) 
         else: 
             sensordata_list.append(True)
+
+        #mby store values and count all values below or above treshold instead of coverting to booleans
+    """
+while True:
+    prox_first = get_proximity(sensor_prox_first)
+    prox_second  = get_proximity(sensor_prox_second)
+
+
+    if prox_first <=2600:                                   # Find a better way to loop over sensors and populate the list?
+        sensordata_list[0] = False                          # Populates a list with 2 elements (index 0 is for first sensor and index 1 is for second sensor) 
+    else: 
+        sensordata_list[0]=True                             # Values are either False or True and I have used arbitrarily chosen values as conditions.
+                                                            # True if sensor value is greater than 2600, meaning the seat is occupied.
+    if prox_second <=2600:                                  # False if the sensor value is eqyualt to or less than 2600, menaning the seat is not occupied.
+        sensordata_list[1]=False
+    else: 
+        sensordata_list[1]=True
+    
     occupiedSeats = sensordata_list.count(True)
     availableSeats = totalSeats - occupiedSeats
     
@@ -122,7 +157,6 @@ while True:
     client.publish(topic, str(payload), qos=0)              # Publish
     print(payload)
     time.sleep(1.0)
-    
 
     # What this script is aimed to do:
     #
