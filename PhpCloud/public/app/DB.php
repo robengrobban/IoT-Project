@@ -7,9 +7,9 @@ class DB
 {
 
 	private static string $serverip = "localhost";
-	private static string $username = "studentenf_iot";
-	private static string $password = "QxwSnPsJr";
-	private static string $database = "studentenf_iot";
+	private static string $username = "root";
+	private static string $password = "";
+	private static string $database = "iot";
 
 	private static object $connection;
 
