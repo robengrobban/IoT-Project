@@ -116,7 +116,9 @@ class Route {
 			}
 		}
 
-		$selectedRoute->setParameters($parameters);
+		if ( !is_null($selectedRoute) ) {
+			$selectedRoute->setParameters($parameters);
+		}
 		return $selectedRoute;
 	}
 
