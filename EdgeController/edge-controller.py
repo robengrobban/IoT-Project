@@ -55,7 +55,10 @@ client.connect(broker)
 client.loop_start()
 
 def on_connect(client, uderdata, flags, rc):
-    print("Connected")
+    if rc==0:
+        print("Connection established. Code: "+str(rc))
+    else:
+        print("Connection failed. Code: " + str(rc))
     
 client.on_connect = on_connect
 
@@ -74,7 +77,7 @@ for id in carriages:
     print("Subscribing to: " + "carriage/"+str(id))
     client.subscribe("carriage/"+str(id), qos = 0)
 
-#publsihing the information
+#publishing the information
 while True:
     #Converting to json
     for id in trains:

@@ -66,13 +66,13 @@ def get_proximity(sensor):
 ############### MQTT section ################## (from lab)
 
 # when connecting to mqtt do this
-def on_connect(client, userdata, flags, rc):
+def on_connect(client, userdata, flags, rc):                                # rc, result code, is used. 0 = connected ok
 	if rc==0:
 		print("Connection established. Code: "+str(rc))
 	else:
 		print("Connection failed. Code: " + str(rc))
 		
-def on_publish(client, userdata, mid):
+def on_publish(client, userdata, mid):                                      # mid=integer incremental per publish. if QoS = 0, mid comes from client. If QoS = or 3, mid comes from broker
     print("Published: " + str(mid))
 	
 def on_disconnect(client, userdata, rc):
@@ -84,17 +84,23 @@ def on_disconnect(client, userdata, rc):
 def on_log(client, userdata, level, buf):		                            # Message is in buf
     print("MQTT Log: " + str(buf))
 
-# Connect functions for MQTT
-client = mqtt.Client()
-client.on_connect = on_connect
+# attach function to callbacks
+client = mqtt.Client()                                                      # Create new instance of mqtt client
+client.on_connect = on_connect                                              # Attach function on_connect to callback for client.on_connect
 client.on_disconnect = on_disconnect
 client.on_publish = on_publish
 client.on_log = on_log
 
+# user = "jeppe"
+# password = "IoT@HT22"
+# client.username_pw_set(username=user,password=password)
+
 # Connect to MQTT 
 print("Attempting to connect to broker " + broker)
 client.connect(broker)	                                                    # Broker address, port and keepalive (maximum period in seconds allowed between communications with the broker)
-client.loop_start()
+# should have something here to wait for connection before starting loop
+
+client.loop_start()                                                         # Start loop, needed to catch/process callbacks
 
 ########### Data processing and publishing ############# 
 while True: 
